@@ -15,10 +15,9 @@ class _TestScreenState extends State<TestScreen> {
     return const Scaffold(
       body: Column(
         children: [
+          Text("Master"),
           Text("Develop"),
-          Text("Develop"),
-          Text("Develop"),
-          Text("Develop"),
+          Text("Vichet"),
         ],
       ),
     );
