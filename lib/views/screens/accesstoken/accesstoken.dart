@@ -16,43 +16,27 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String accessToken = '';
-
   getToken() async {
     var mytoken = await FirebaseMessaging.instance.getToken();
     print("My Device Token: ${mytoken}");
   }
-
   @override
   void initState() {
     getToken();
     super.initState();
     getAccessToken();
   }
-
   Future<void> getAccessToken() async {
     try {
       final serviceAccountJson = await rootBundle.loadString(
           'assets/all-in-one-app-8277f-firebase-adminsdk-sq9n3-de6129c2df.json');
 
-      final accountCredentials = ServiceAccountCredentials.fromJson(
-        json.decode(serviceAccountJson),
-      );
-
+      final accountCredentials = ServiceAccountCredentials.fromJson(json.decode(serviceAccountJson),);
       const scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
-
       final client = http.Client();
       try {
-        final accessCredentials =
-        await obtainAccessCredentialsViaServiceAccount(
-          accountCredentials,
-          scopes,
-          client,
-        );
-
-        setState(() {
-          accessToken = accessCredentials.accessToken.data;
-        });
-
+        final accessCredentials = await obtainAccessCredentialsViaServiceAccount(accountCredentials, scopes, client,);
+        setState(() {accessToken = accessCredentials.accessToken.data;});
         print('Access Token: $accessToken');
       } catch (e) {
         print('Error obtaining access token: $e');
@@ -63,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Error loading service account JSON: $e');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

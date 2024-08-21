@@ -164,10 +164,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
-        apiKey: "AIzaSyDLgCLoKoqg4zdnNzRrzvAkkSUzyWmsdzk",
-        appId: "1:716590336313:android:5394b955dabd3d6b6cc0e8",
-        messagingSenderId: "716590336313",
-        projectId: "all-in-one-app-8277f"
+        apiKey: "AIzaSyDD83PH9CuF_vRHq5Gizgsdak7AtA94llo",
+        appId: "1:1010027060103:android:c07c010e7e99c426929122",
+        messagingSenderId: "1010027060103",
+        projectId: "sample-structure-app"
     ),
   );
 
