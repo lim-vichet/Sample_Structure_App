@@ -1,13 +1,17 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../../logic/bloc/login_bloc/login_bloc.dart';
 import '../../../../utils/constants/app_colors.dart';
 import '../../../../utils/constants/app_dialog.dart';
 import '../../../../utils/constants/app_font_styles.dart';
+import '../../../../utils/constants/app_text_field.dart';
 import '../../../../utils/global_use.dart';
+import '../../../widgets/phone_formater/phone_formater.dart';
 import '../../home_screen/home_screen.dart';
 import '../../main_screen/main_screen.dart';
 import 'otp_screen.dart';
@@ -29,6 +33,10 @@ class _LoginScreenState extends State<LoginScreen> {
     log("ContentContent $idTokenFirebase \n\n\n\n");
     super.initState();
   }
+
+  String phone = '';
+  String checkEmail = '';
+  String checkPhone = '';
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +109,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.number,
                           autofocus: true,
                           controller: phoneController,
-                          onChanged: (phone) {
-                            // context.read<LoginBloc>().add(ValidateEvent(phone: phone));
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            PhoneNumberFormatter(),
+                            LengthLimitingTextInputFormatter(12)
+                          ],
+                          onChanged: (phoneValue) {
+                            setState(() {
+                              checkPhone = phoneValue;
+                              phone = phoneValue.replaceAll(" ", '');
+                              print("phone============${checkPhone}");
+                            });
                           },
                           decoration: InputDecoration(
                             hintText: " +855 ",
@@ -144,6 +161,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+
+                        // AppTextField.appTextField(context,
+                        //     padding: EdgeInsets.only(right: 0),
+                        //     hintText: "Phone Number".tr,
+                        //     isObsecure: false,
+                        //     // controller: emailController,
+                        //     autofillHints: const [AutofillHints.username],
+                        //     // isError: email,
+                        //     keyboardType: TextInputType.number,
+                        //
+                        //     inputFormatters: [
+                        //       FilteringTextInputFormatter.digitsOnly,
+                        //       PhoneNumberFormatter(),
+                        //       LengthLimitingTextInputFormatter(12)
+                        //     ],
+                        //     onChange: (phoneValue) {
+                        //       setState(() {
+                        //         checkPhone = phoneValue;
+                        //         phone = phoneValue.replaceAll(" ", '');
+                        //         print("phone============${checkPhone}");
+                        //       });
+                        //     }
+                        // ),
                         SizedBox(
                           height: 10,
                         ),
@@ -163,7 +203,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () {
                                   // Navigator.pushNamed(context, OTPScreen.routeName);
                                   // Navigator.pushNamed(context, TestOTPCutSpace.routeName);
-                                  context.read<LoginBloc>().add(EventLogin(phone: phoneController.text, language: 'EN'));
+                                  // context.read<LoginBloc>().add(EventLogin(phone: phoneController.text, language: 'EN'));
+                                  Navigator.pushNamed(context, MainScreen.routeName);
                                 },
                                 child: Expanded(
                                     flex: 1,
