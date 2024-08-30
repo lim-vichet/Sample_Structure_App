@@ -14,6 +14,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("kon papa==============");
     Future.delayed(
       const Duration(seconds: 2),
           () {

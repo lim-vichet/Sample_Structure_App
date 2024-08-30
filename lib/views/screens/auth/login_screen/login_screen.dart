@@ -84,24 +84,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.only(left: 40, right: 40),
                     child: Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 150,
                           height: 150,
                           // color: Colors.deepOrange,
-                          child: const Image(
+                          child: Image(
                             image: AssetImage("assets/images/logo_app.png"),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Container(
                             // color: Colors.lightBlue,
-                            child: Text(
+                            child: const Text(
                           "Register E-Comerce App to Experience All\nMobile App Feature",
                           textAlign: TextAlign.left,
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         TextField(

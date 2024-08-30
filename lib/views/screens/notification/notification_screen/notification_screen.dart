@@ -11,10 +11,17 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-
+    return  Scaffold(
+      appBar: AppBar(
+        title: const Center(child: Text("Notification Screen")),
       ),
+      body: const Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: Text("Hello kon papa"))
+        ],
+      )
     );
   }
 }

@@ -144,6 +144,7 @@ import 'package:sample_structure_app/routes/routes.dart';
 import 'package:sample_structure_app/utils/global_use.dart';
 import 'package:sample_structure_app/utils/shared_preferences_service.dart';
 import 'package:sample_structure_app/views/screens/home_screen/home_screen.dart';
+import 'package:sample_structure_app/views/screens/notification/notification_screen/notification_screen.dart';
 import 'package:sample_structure_app/views/screens/splash_screen/splash_screen.dart';
 import 'package:sample_structure_app/views/widgets/internet_connection_screen/getx_network_manager_binding.dart';
 
@@ -164,10 +165,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
-        apiKey: "AIzaSyDLgCLoKoqg4zdnNzRrzvAkkSUzyWmsdzk",
-        appId: "1:716590336313:android:5394b955dabd3d6b6cc0e8",
-        messagingSenderId: "716590336313",
-        projectId: "all-in-one-app-8277f"
+        apiKey: "AIzaSyDD83PH9CuF_vRHq5Gizgsdak7AtA94llo",
+        appId: "1:1010027060103:android:c07c010e7e99c426929122",
+        messagingSenderId: "1010027060103",
+        projectId: "sample-structure-app"
     ),
   );
 
@@ -407,41 +408,30 @@ class _MyAppState extends State<MyApp> {
                 onTap: (){
                   OverlaySupportEntry.of(context)!.dismiss();
 
-                  if (notification.title == 'Ticket'){
-                    Navigator.pushNamed(context, HomeScreen.routeName,
-                        arguments: {
-                          'getListStatusTicket':(v){},
-                          // 'id': int.tryParse(_notificationInfo!.id),
-                          'id': int.tryParse(notification!.id),
-                          'idCheckStatusNotification':int.tryParse(notification.notificationId.toString()),
-                          'getListStatusTicket':(v){},
-                          // 'id': int.tryParse(idNotification),
-                          'status': true,
-                          'countNo': countNotifications,
-                          'statusNotification': 'fromListNotification',
-                          // 'statusNotification': 'Main Thom',
-                        }
+                  if (notification.type == 'Boss'){
+                    Navigator.pushNamed(context, NotificationScreen.routeName,
+
                     );
                   }
-                  else if(notification.title =='Leave Application Form'){
-                    Navigator.pushNamed(context, HomeScreen.routeName,
-                        arguments: {
-                          // 'getListStatusTicket':(v){},
-                          'id': int.tryParse(notification.id),
-                          'idCheckStatusNotification':int.tryParse(notification.notificationId.toString()),
-                          // 'formType': notification.type,
-                          'formType': '',
-                          'statusApprove': "Approve",
-                          'status': true,
-                          'countNo': countNotifications,
-                          'onTapGetDataStaffApprove':(v) {},
-                          'statusNotification': 'fromListNotification',
-                          'getListNotification': () {
-                            // print("Hello uuuuu");
-                          },
-                        }
-                    );
-                  }
+                  // else if(notification.title =='Leave Application Form'){
+                  //   Navigator.pushNamed(context, HomeScreen.routeName,
+                  //       arguments: {
+                  //         // 'getListStatusTicket':(v){},
+                  //         'id': int.tryParse(notification.id),
+                  //         'idCheckStatusNotification':int.tryParse(notification.notificationId.toString()),
+                  //         // 'formType': notification.type,
+                  //         'formType': '',
+                  //         'statusApprove': "Approve",
+                  //         'status': true,
+                  //         'countNo': countNotifications,
+                  //         'onTapGetDataStaffApprove':(v) {},
+                  //         'statusNotification': 'fromListNotification',
+                  //         'getListNotification': () {
+                  //           // print("Hello uuuuu");
+                  //         },
+                  //       }
+                  //   );
+                  // }
                 },
                 child: ListTile(
                   leading: SizedBox.fromSize(
@@ -713,33 +703,56 @@ class _MyAppState extends State<MyApp> {
     return OverlaySupport(
       child: ResponsiveSizer(
         builder: (context, orientation, screenType) {
-          return Listener(
-            // onPointerDown: (PointerDownEvent event) {
-            //     log("message-----PointerDownEvent: $event");
-            //     _start = 10;
-            //     startTimer();
-            // },
-            child: GetMaterialApp(
-              title: 'Luna',
-              debugShowCheckedModeBanner: false,
-              // locale: currectLang,
-              // translations: Language(),
-              // fallbackLocale: const Locale('en', 'US'),
-              // initialBinding: GetXNetworkManagerBinding(),
-              theme: ThemeData(
-                fontFamily: 'Battambang-Regular',
-                appBarTheme:  AppBarTheme(
-                    systemOverlayStyle: SystemUiOverlayStyle.dark,
-                    color: Colors.red
-                ),
+          return GetMaterialApp(
+            title: 'Luna',
+            debugShowCheckedModeBanner: false,
+            // locale: currectLang,
+            // translations: Language(),
+            // fallbackLocale: const Locale('en', 'US'),
+            // initialBinding: GetXNetworkManagerBinding(),
+            theme: ThemeData(
+              fontFamily: 'Battambang-Regular',
+              appBarTheme:  AppBarTheme(
+                  systemOverlayStyle: SystemUiOverlayStyle.dark,
+                  color: Colors.red
               ),
-              initialBinding: GetXNetworkManagerBinding(),
-              navigatorKey: GlobalUse.navigatorKey,
-              initialRoute: SplashScreen.routeName,
-              routes: routes,
-              // home: const ExampleScreen(),
             ),
+            initialBinding: GetXNetworkManagerBinding(),
+            navigatorKey: GlobalUse.navigatorKey,
+            initialRoute: SplashScreen.routeName,
+            routes: routes,
+            // home: const ExampleScreen(),
           );
+
+
+
+          // return Listener(
+          //   // onPointerDown: (PointerDownEvent event) {
+          //   //     log("message-----PointerDownEvent: $event");
+          //   //     _start = 10;
+          //   //     startTimer();
+          //   // },
+          //   child: GetMaterialApp(
+          //     title: 'Luna',
+          //     debugShowCheckedModeBanner: false,
+          //     // locale: currectLang,
+          //     // translations: Language(),
+          //     // fallbackLocale: const Locale('en', 'US'),
+          //     // initialBinding: GetXNetworkManagerBinding(),
+          //     theme: ThemeData(
+          //       fontFamily: 'Battambang-Regular',
+          //       appBarTheme:  AppBarTheme(
+          //           systemOverlayStyle: SystemUiOverlayStyle.dark,
+          //           color: Colors.red
+          //       ),
+          //     ),
+          //     initialBinding: GetXNetworkManagerBinding(),
+          //     navigatorKey: GlobalUse.navigatorKey,
+          //     initialRoute: SplashScreen.routeName,
+          //     routes: routes,
+          //     // home: const ExampleScreen(),
+          //   ),
+          // );
         },
       ),
     );

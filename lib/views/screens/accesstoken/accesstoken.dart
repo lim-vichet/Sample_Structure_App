@@ -16,7 +16,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String accessToken = '';
-
   getToken() async {
     var mytoken = await FirebaseMessaging.instance.getToken();
     print("My Device Token: ${mytoken}");
@@ -32,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> getAccessToken() async {
     try {
       final serviceAccountJson = await rootBundle.loadString(
-          'assets/all-in-one-app-8277f-firebase-adminsdk-sq9n3-de6129c2df.json');
+          'assets/sample-structure-app-firebase-adminsdk-st8vj-5502df84ea.json');
 
       final accountCredentials = ServiceAccountCredentials.fromJson(
         json.decode(serviceAccountJson),

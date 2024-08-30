@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:googleapis_auth/auth.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../logic/cubit/bottom_nav/bottom_nav_cubit.dart';
@@ -16,7 +20,9 @@ import '../../widgets/internet_connection_screen/internet_connection_widget.dart
 import '../account_screen/account_screen.dart';
 import '../cart_screen/cart_screen.dart';
 import '../home_screen/home_screen.dart';
+import '../notification/notification_screen/notification_screen.dart';
 import '../order_screen/order_screen.dart';
+import 'package:http/http.dart' as http;
 
 
 
@@ -33,8 +39,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> keyContext = GlobalKey();
 
+  String accessToken = '';
+  getToken() async {
+    var mytoken = await FirebaseMessaging.instance.getToken();
+    print("My Device Token: ${mytoken}");
+  }
+
   @override
   void initState() {
+    print("Test====================");
     super.initState();
     // close app but not clear Push Notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -46,61 +59,87 @@ class _MainScreenState extends State<MainScreen> {
           id: message.data["id"],
           type: message.data["type"] ?? '',
           notificationId: message.data["notificationId"]);
-      // print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(notification.type)}");
-      // print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(message.data)}");
-      // print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(message.notification!.title)}");
-      // print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(message.notification!.body)}");
-      // print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(notification.id)}");
-      // print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(notification.notificationId)}");
+      print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(notification.type)}");
+      print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(message.data)}");
+      print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(message.notification!.title)}");
+      print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(message.notification!.body)}");
+      print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(notification.id)}");
+      print("nnnnnnnnnnnnnnnnnnnnnnnn------3 ${jsonEncode(notification.notificationId)}");
       setState(() {
         countNotifications++;
         isPushNotification = true;
         onTapNotification = true;
       });
 
-      if (notification.title == 'Ticket'){
-        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,
-            // Navigator.pushNamed(context, TicketDetailScreen.routeName,
-            arguments: {
-              'getListStatusTicket':(v){},
-              'id': int.tryParse(notification!.id),
-              'idCheckStatusNotification':int.tryParse(notification.notificationId.toString()),
-              'getListStatusTicket':(v){},
-              // 'id': int.tryParse(idNotification),
-              'status': true,
-              'countNo': countNotifications,
-              'statusNotification': 'fromListNotification',
-            }
+      if (notification.type == 'Boss'){
+
+        Navigator.pushNamedAndRemoveUntil(context, NotificationScreen.routeName, (route) => false,
+
         );
       }
-      else if(notification.title =='Leave Application Form'){
-        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,
-            arguments: {
-              // 'getListStatusTicket':(v){},
-              'id': int.tryParse(notification.id),
-              'idCheckStatusNotification':int.tryParse(notification.notificationId.toString()),
-              // 'formType': notification.type,
-              'formType': '',
-              'statusApprove': "Approve",
-              'status': true,
-              'countNo': countNotifications,
-              'onTapGetDataStaffApprove':(v) {},
-              'statusNotification': 'fromListNotification',
-              'getListNotification': () {
-                // print("Hello uuuuu");
-              },
-            }
-        );
-      }
+      // else if(notification.title =='Leave Application Form'){
+      //   Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,
+      //       arguments: {
+      //         // 'getListStatusTicket':(v){},
+      //         'id': int.tryParse(notification.id),
+      //         'idCheckStatusNotification':int.tryParse(notification.notificationId.toString()),
+      //         // 'formType': notification.type,
+      //         'formType': '',
+      //         'statusApprove': "Approve",
+      //         'status': true,
+      //         'countNo': countNotifications,
+      //         'onTapGetDataStaffApprove':(v) {},
+      //         'statusNotification': 'fromListNotification',
+      //         'getListNotification': () {
+      //           // print("Hello uuuuu");
+      //         },
+      //       }
+      //   );
+      // }
 
     });
     // close app but not clear Push Notification
 
-    // if (widget.countUnseen != null) {
-    //   countNotifications = widget.countUnseen!;
-    // }
-  }
 
+    getToken();
+    super.initState();
+    getAccessToken();
+
+  }
+  Future<void> getAccessToken() async {
+    try {
+      final serviceAccountJson = await rootBundle.loadString(
+          'assets/sample-structure-app-firebase-adminsdk-st8vj-5502df84ea.json');
+
+      final accountCredentials = ServiceAccountCredentials.fromJson(
+        json.decode(serviceAccountJson),
+      );
+
+      const scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+
+      final client = http.Client();
+      try {
+        final accessCredentials =
+        await obtainAccessCredentialsViaServiceAccount(
+          accountCredentials,
+          scopes,
+          client,
+        );
+
+        setState(() {
+          accessToken = accessCredentials.accessToken.data;
+        });
+
+        print('Access Token: $accessToken');
+      } catch (e) {
+        print('Error obtaining access token: $e');
+      } finally {
+        client.close();
+      }
+    } catch (e) {
+      print('Error loading service account JSON: $e');
+    }
+  }
 
   addToGroup(context) {
     return showDialog(
@@ -228,91 +267,169 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-
-      onPointerDown: (PointerDownEvent event) {
-        log("message-----PointerDownEvent: $event");
-        _start = 10;
-        startTimer();
-      },
-      child: BlocProvider(
-        create: (context) => BottomNavCubit(0),
-        child: BlocBuilder<BottomNavCubit, int>(
-          builder: (context, state) {
-            return Scaffold(
-              key: keyContext,
-              body: InternetConnectWidget(
-                child: LazyLoadIndexedStack(
-                  index: BlocProvider.of<BottomNavCubit>(context).currentIndex,
-                  children: const [
-                    HomeScreen(),
-                    OrderScreen(),
-                    CartScreen(),
-                    AccountScreen()
-                  ],
-                ),
+    return BlocProvider(
+      create: (context) => BottomNavCubit(0),
+      child: BlocBuilder<BottomNavCubit, int>(
+        builder: (context, state) {
+          return Scaffold(
+            key: keyContext,
+            body: InternetConnectWidget(
+              child: LazyLoadIndexedStack(
+                index: BlocProvider.of<BottomNavCubit>(context).currentIndex,
+                children: const [
+                  HomeScreen(),
+                  OrderScreen(),
+                  CartScreen(),
+                  AccountScreen()
+                ],
               ),
-              bottomNavigationBar: SizedBox(
+            ),
+            bottomNavigationBar: SizedBox(
 
-                child: BottomNavigationBar(
-                  currentIndex:
-                      BlocProvider.of<BottomNavCubit>(context).currentIndex,
-                  onTap: (index) {
-                    bool isNotLogin =
-                        SharedPreferencesService.instance?.token == "" ||
-                            SharedPreferencesService.instance?.token == null;
-                    BlocProvider.of<BottomNavCubit>(context)
-                        .onNavbarIndexChange(index);
-                    // if ((index == 1 || index == 2 || index == 3) &&
-                    //     isNotLogin) {
-                    //   Navigator.pushNamed(context, LoginScreen.routeName);
-                    // } else {
-                    //   BlocProvider.of<BottomNavCubit>(context)
-                    //       .onNavbarIndexChange(index);
-                    // }
-                  },
-                  backgroundColor: AppColors().white,
-                  unselectedItemColor: AppColors().black,
-                  unselectedFontSize: 12.px,
-                  selectedFontSize: 14.px,
-                  iconSize: 24.px,
-                  selectedItemColor: AppColors().primaryRed,
-                  type: BottomNavigationBarType.fixed,
+              child: BottomNavigationBar(
+                currentIndex:
+                BlocProvider.of<BottomNavCubit>(context).currentIndex,
+                onTap: (index) {
+                  bool isNotLogin =
+                      SharedPreferencesService.instance?.token == "" ||
+                          SharedPreferencesService.instance?.token == null;
+                  BlocProvider.of<BottomNavCubit>(context)
+                      .onNavbarIndexChange(index);
+                  // if ((index == 1 || index == 2 || index == 3) &&
+                  //     isNotLogin) {
+                  //   Navigator.pushNamed(context, LoginScreen.routeName);
+                  // } else {
+                  //   BlocProvider.of<BottomNavCubit>(context)
+                  //       .onNavbarIndexChange(index);
+                  // }
+                },
+                backgroundColor: AppColors().white,
+                unselectedItemColor: AppColors().black,
+                unselectedFontSize: 12.px,
+                selectedFontSize: 14.px,
+                iconSize: 24.px,
+                selectedItemColor: AppColors().primaryRed,
+                type: BottomNavigationBarType.fixed,
 
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: bottomNavIcon(icon: Icons.home, isActive: false),
-                      activeIcon: bottomNavIcon(icon: Icons.home, isActive: true),
-                      label: "Home",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: bottomNavIcon(
-                          icon: Icons.list_alt_outlined, isActive: false),
-                      activeIcon: bottomNavIcon(
-                          icon: Icons.list_alt_outlined, isActive: true),
-                      label: "Order",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: bottomNavIcon(
-                          icon: Icons.shopping_cart_outlined, isActive: false),
-                      activeIcon: bottomNavIcon(
-                          icon: Icons.shopping_cart_outlined, isActive: true),
-                      label: "Cart",
-                    ),
-                    BottomNavigationBarItem(
-                      icon: bottomNavIcon(
-                          icon: Icons.account_circle_outlined, isActive: false),
-                      activeIcon: bottomNavIcon(
-                          icon: Icons.account_circle_outlined, isActive: true),
-                      label: "Account",
-                    ),
-                  ],
-                ),
+                items: [
+                  BottomNavigationBarItem(
+                    icon: bottomNavIcon(icon: Icons.home, isActive: false),
+                    activeIcon: bottomNavIcon(icon: Icons.home, isActive: true),
+                    label: "Home",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: bottomNavIcon(
+                        icon: Icons.list_alt_outlined, isActive: false),
+                    activeIcon: bottomNavIcon(
+                        icon: Icons.list_alt_outlined, isActive: true),
+                    label: "Order",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: bottomNavIcon(
+                        icon: Icons.shopping_cart_outlined, isActive: false),
+                    activeIcon: bottomNavIcon(
+                        icon: Icons.shopping_cart_outlined, isActive: true),
+                    label: "Cart",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: bottomNavIcon(
+                        icon: Icons.account_circle_outlined, isActive: false),
+                    activeIcon: bottomNavIcon(
+                        icon: Icons.account_circle_outlined, isActive: true),
+                    label: "Account",
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
+
+    // return Listener(
+    //   onPointerDown: (PointerDownEvent event) {
+    //     log("message-----PointerDownEvent: $event");
+    //     _start = 10;
+    //     startTimer();
+    //   },
+    //   child: BlocProvider(
+    //     create: (context) => BottomNavCubit(0),
+    //     child: BlocBuilder<BottomNavCubit, int>(
+    //       builder: (context, state) {
+    //         return Scaffold(
+    //           key: keyContext,
+    //           body: InternetConnectWidget(
+    //             child: LazyLoadIndexedStack(
+    //               index: BlocProvider.of<BottomNavCubit>(context).currentIndex,
+    //               children: const [
+    //                 HomeScreen(),
+    //                 OrderScreen(),
+    //                 CartScreen(),
+    //                 AccountScreen()
+    //               ],
+    //             ),
+    //           ),
+    //           bottomNavigationBar: SizedBox(
+    //
+    //             child: BottomNavigationBar(
+    //               currentIndex:
+    //               BlocProvider.of<BottomNavCubit>(context).currentIndex,
+    //               onTap: (index) {
+    //                 bool isNotLogin =
+    //                     SharedPreferencesService.instance?.token == "" ||
+    //                         SharedPreferencesService.instance?.token == null;
+    //                 BlocProvider.of<BottomNavCubit>(context)
+    //                     .onNavbarIndexChange(index);
+    //                 // if ((index == 1 || index == 2 || index == 3) &&
+    //                 //     isNotLogin) {
+    //                 //   Navigator.pushNamed(context, LoginScreen.routeName);
+    //                 // } else {
+    //                 //   BlocProvider.of<BottomNavCubit>(context)
+    //                 //       .onNavbarIndexChange(index);
+    //                 // }
+    //               },
+    //               backgroundColor: AppColors().white,
+    //               unselectedItemColor: AppColors().black,
+    //               unselectedFontSize: 12.px,
+    //               selectedFontSize: 14.px,
+    //               iconSize: 24.px,
+    //               selectedItemColor: AppColors().primaryRed,
+    //               type: BottomNavigationBarType.fixed,
+    //
+    //               items: [
+    //                 BottomNavigationBarItem(
+    //                   icon: bottomNavIcon(icon: Icons.home, isActive: false),
+    //                   activeIcon: bottomNavIcon(icon: Icons.home, isActive: true),
+    //                   label: "Home",
+    //                 ),
+    //                 BottomNavigationBarItem(
+    //                   icon: bottomNavIcon(
+    //                       icon: Icons.list_alt_outlined, isActive: false),
+    //                   activeIcon: bottomNavIcon(
+    //                       icon: Icons.list_alt_outlined, isActive: true),
+    //                   label: "Order",
+    //                 ),
+    //                 BottomNavigationBarItem(
+    //                   icon: bottomNavIcon(
+    //                       icon: Icons.shopping_cart_outlined, isActive: false),
+    //                   activeIcon: bottomNavIcon(
+    //                       icon: Icons.shopping_cart_outlined, isActive: true),
+    //                   label: "Cart",
+    //                 ),
+    //                 BottomNavigationBarItem(
+    //                   icon: bottomNavIcon(
+    //                       icon: Icons.account_circle_outlined, isActive: false),
+    //                   activeIcon: bottomNavIcon(
+    //                       icon: Icons.account_circle_outlined, isActive: true),
+    //                   label: "Account",
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 }
