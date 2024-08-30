@@ -109,7 +109,9 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> getAccessToken() async {
     try {
       final serviceAccountJson = await rootBundle.loadString(
-          'assets/sample-structure-app-firebase-adminsdk-st8vj-5502df84ea.json');
+        ""
+          // 'assets/sample-structure-app-firebase-adminsdk-st8vj-5502df84ea.json'
+      );
 
       final accountCredentials = ServiceAccountCredentials.fromJson(
         json.decode(serviceAccountJson),
