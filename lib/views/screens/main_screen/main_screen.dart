@@ -110,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
     try {
       final serviceAccountJson = await rootBundle.loadString(
         ""
-          // 'assets/sample-structure-app-firebase-adminsdk-st8vj-5502df84ea.json'
+
       );
 
       final accountCredentials = ServiceAccountCredentials.fromJson(
