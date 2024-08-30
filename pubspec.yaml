@@ -96,7 +96,6 @@ flutter:
     - lib/configs/
     - assets/icons/
     - assets/images/
-#    - assets/sample-structure-app-firebase-adminsdk-st8vj-5502df84ea.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
