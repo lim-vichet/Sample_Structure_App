@@ -20,6 +20,7 @@ import '../../widgets/internet_connection_screen/internet_connection_widget.dart
 import '../account_screen/account_screen.dart';
 import '../cart_screen/cart_screen.dart';
 import '../home_screen/home_screen.dart';
+import '../notification/notification_screen/notification_detail.dart';
 import '../notification/notification_screen/notification_screen.dart';
 import '../order_screen/order_screen.dart';
 import 'package:http/http.dart' as http;
@@ -72,11 +73,15 @@ class _MainScreenState extends State<MainScreen> {
       });
 
       if (notification.type == 'Boss'){
-
-        Navigator.pushNamedAndRemoveUntil(context, NotificationScreen.routeName, (route) => false,
+        Navigator.pushNamed(context, NotificationScreen.routeName,
 
         );
       }
+      else if (notification.type == 'Staff'){
+        Navigator.pushNamedAndRemoveUntil(context, NotificationDetail.routeName, (route) => false,);
+      }
+
+
       // else if(notification.title =='Leave Application Form'){
       //   Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false,
       //       arguments: {
@@ -277,6 +282,7 @@ class _MainScreenState extends State<MainScreen> {
               child: LazyLoadIndexedStack(
                 index: BlocProvider.of<BottomNavCubit>(context).currentIndex,
                 children: const [
+
                   HomeScreen(),
                   OrderScreen(),
                   CartScreen(),

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_images.dart';
+import '../../../utils/global_use.dart';
 import '../accesstoken/accesstoken.dart';
 import '../auth/login_screen/login_screen.dart';
 import '../main_screen/main_screen.dart';
+import '../notification/notification_screen/notification_detail.dart';
 import '../test_auth/signup.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -17,7 +19,7 @@ class SplashScreen extends StatelessWidget {
     print("kon papa==============");
     Future.delayed(
       const Duration(seconds: 2),
-          () {
+          () async {
         // var lang = localStore.read('lang');
         //
         // if (lang == null || lang == "") {
@@ -40,7 +42,18 @@ class SplashScreen extends StatelessWidget {
           // Get.to(RecodeScreen());
 
             // Navigator.pushNamedAndRemoveUntil(context, SignUpScreen.routeName, (route) => false);
-            Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
+
+            await onTapNotification?
+            notificationType=='Boss'?
+            await Navigator.pushNamedAndRemoveUntil(context, NotificationDetail.routeName, (route) => false,):
+            notificationType=='Staff'?
+            Navigator.pushNamedAndRemoveUntil(context, NotificationDetail.routeName, (route) => false,):
+            await  Navigator.pushNamedAndRemoveUntil(context, MainScreen.routeName, (route) => false):
+            await  Navigator.pushNamedAndRemoveUntil(context, MainScreen.routeName, (route) => false);
+
+
+
+            // Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
           // Navigator.pushNamedAndRemoveUntil(context, MyHomePage.routeName, (route) => false);
 
 

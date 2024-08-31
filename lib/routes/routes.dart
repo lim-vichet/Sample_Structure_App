@@ -5,6 +5,7 @@ import '../views/screens/auth/login_screen/otp_screen.dart';
 import '../views/screens/auth/register_screen/register_screen.dart';
 import '../views/screens/home_screen/home_screen.dart';
 import '../views/screens/main_screen/main_screen.dart';
+import '../views/screens/notification/notification_screen/notification_detail.dart';
 import '../views/screens/notification/notification_screen/notification_screen.dart';
 import '../views/screens/splash_screen/splash_screen.dart';
 import '../views/screens/test_auth/signup.dart';
@@ -20,6 +21,7 @@ final routes = {
   HomeScreen.routeName: (context) => const HomeScreen(),
   SignUpScreen.routeName: (context) => const SignUpScreen(),
   MyHomePage.routeName: (context) => MyHomePage(),
+  NotificationDetail.routeName: (context) => const NotificationDetail(),
 
 
 

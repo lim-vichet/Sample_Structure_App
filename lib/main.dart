@@ -144,6 +144,7 @@ import 'package:sample_structure_app/routes/routes.dart';
 import 'package:sample_structure_app/utils/global_use.dart';
 import 'package:sample_structure_app/utils/shared_preferences_service.dart';
 import 'package:sample_structure_app/views/screens/home_screen/home_screen.dart';
+import 'package:sample_structure_app/views/screens/notification/notification_screen/notification_detail.dart';
 import 'package:sample_structure_app/views/screens/notification/notification_screen/notification_screen.dart';
 import 'package:sample_structure_app/views/screens/splash_screen/splash_screen.dart';
 import 'package:sample_structure_app/views/widgets/internet_connection_screen/getx_network_manager_binding.dart';
@@ -413,6 +414,16 @@ class _MyAppState extends State<MyApp> {
 
                     );
                   }
+                  else if (notification.type == 'Staff'){
+                    Navigator.pushNamed(context, NotificationDetail.routeName,
+
+                    );
+                  }
+
+
+
+
+
                   // else if(notification.title =='Leave Application Form'){
                   //   Navigator.pushNamed(context, HomeScreen.routeName,
                   //       arguments: {
