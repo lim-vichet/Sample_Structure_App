@@ -72,12 +72,15 @@ class _MainScreenState extends State<MainScreen> {
         onTapNotification = true;
       });
 
-      if (notification.type == 'Boss'){
-        Navigator.pushNamed(context, NotificationScreen.routeName,
 
-        );
+
+
+      if (notification.type == 'Boss'){
+        print("Boss==============${notification.type}");
+        Navigator.pushNamedAndRemoveUntil(context, NotificationScreen.routeName, (route) => false,);
       }
       else if (notification.type == 'Staff'){
+        print("Boss==============${notification.type}");
         Navigator.pushNamedAndRemoveUntil(context, NotificationDetail.routeName, (route) => false,);
       }
 

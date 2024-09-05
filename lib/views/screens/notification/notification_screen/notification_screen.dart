@@ -19,7 +19,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(child: Text("Hello kon papa"))
+          Center(child: Text("Hello Boss"))
         ],
       )
     );

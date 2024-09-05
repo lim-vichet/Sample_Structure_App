@@ -22,7 +22,7 @@ class _NotificationDetailState extends State<NotificationDetail> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(child: Text("Hey Boy! Welcome To My Test Screen"))
+            Center(child: Text("Hey Boy! Welcome to Staff"))
           ],
         ),
     );
